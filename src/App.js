@@ -12,6 +12,7 @@ class App extends Component {
     this.state = {
       results: {},
       query: 'redux',
+      resultKey: '',
       isLoading: true,
     };
 
@@ -22,11 +23,15 @@ class App extends Component {
 
   setSearchTopstories(result, query) {
     const { hits, page, hitsPerPage } = result;
-    this.setState({ results: { [query]: { hits, page, hitsPerPage } }, isLoading: false });
+    const { results } = this.state;
+    this.setState({ results: { ...results, [query]: { hits, page, hitsPerPage } }, resultKey: query, isLoading: false });
   }
 
   fetchSearchTopstories(query) {
-    if (this.state.results[query]) { return; }
+    if (this.state.results[query]) {
+      this.setState({ resultKey: query });
+      return;
+    }
 
     this.setState({ isLoading: true });
 
@@ -50,7 +55,7 @@ class App extends Component {
   }
 
   render() {
-    const { results, query, isLoading } = this.state;
+    const { results, resultKey, query, isLoading } = this.state;
 
     return (
       <div>
@@ -66,7 +71,7 @@ class App extends Component {
         </div>
         { isLoading ?
             <div>Loading ...</div> :
-            results[query].hits.map((item, key) =>
+            results[resultKey].hits.map((item, key) =>
               <div key={key}>
                 <span><a href={item.url}>{item.title}</a></span>
                 <span>{item.author}</span>
