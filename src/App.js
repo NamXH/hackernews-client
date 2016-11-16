@@ -24,7 +24,11 @@ class App extends Component {
   setSearchTopstories(result, query) {
     const { hits, page, hitsPerPage } = result;
     const { results } = this.state;
-    this.setState({ results: { ...results, [query]: { hits, page, hitsPerPage } }, resultKey: query, isLoading: false });
+    this.setState({
+      results: { ...results, [query]: { hits, page, hitsPerPage } },
+      resultKey: query,
+      isLoading: false
+    });
   }
 
   fetchSearchTopstories(query) {
