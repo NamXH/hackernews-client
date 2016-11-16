@@ -10,7 +10,9 @@ class App extends Component {
     super();
 
     this.state = {
-      result: null,
+      hits: [],
+      page: null,
+      hitsPerPage: 0,
       query: 'redux',
       isLoading: true,
     };
@@ -20,11 +22,15 @@ class App extends Component {
     this.onSearchSubmit = this.onSearchSubmit.bind(this);
   }
 
+  setSearchTopstories({ hits, page, hitsPerPage }) {
+    this.setState({ hits, page, hitsPerPage, isLoading: false })
+  }
+
   fetchSearchTopstories(query) {
     this.setState({ isLoading: true });
     fetch(`${BASE_QUERY}${SEARCH_QUERY}${query}`)
       .then(response => response.json())
-      .then(result => this.setState({ result, isLoading: false }));
+      .then(result => this.setSearchTopstories(result));
   }
 
   onSearchChange(event) {
@@ -42,7 +48,7 @@ class App extends Component {
   }
 
   render() {
-    const { result, query, isLoading } = this.state;
+    const { hits, query, isLoading } = this.state;
 
     return (
       <div>
@@ -58,7 +64,7 @@ class App extends Component {
         </div>
         { isLoading ?
             <div>Loading ...</div> :
-            result.hits.map((item, key) =>
+            hits.map((item, key) =>
               <div key={key}>
                 <span><a href={item.url}>{item.title}</a></span>
                 <span>{item.author}</span>
