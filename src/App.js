@@ -63,30 +63,50 @@ class App extends Component {
 
     return (
       <div>
-        <form onSubmit={this.onSearchSubmit}>
-          <input type="text" value={query} onChange={this.onSearchChange} />
-          <button type="submit">Search</button>
-        </form>
         <div>
-          <span>Title</span>
-          <span>Author</span>
-          <span>Comment Count</span>
-          <span>Points</span>
+          <InputConfirm query={query} onChange={this.onSearchChange} onSubmit={this.onSearchSubmit}>
+            Search
+          </InputConfirm>
         </div>
-        { isLoading ?
-            <div>Loading ...</div> :
-            results[resultKey].hits.map((item, key) =>
-              <div key={key}>
-                <span><a href={item.url}>{item.title}</a></span>
-                <span>{item.author}</span>
-                <span>{item.num_comments}</span>
-                <span>{item.points}</span>
-              </div>
-            )
-        }
+        <div>
+          <HitsTable results={results} resultKey={resultKey} isLoading={isLoading} />
+        </div>
       </div>
     );
   }
+}
+
+function HitsTable({ results, resultKey, isLoading }) {
+  return (
+    <div>
+      <div>
+        <span>Title</span>
+        <span>Author</span>
+        <span>Comment Count</span>
+        <span>Points</span>
+      </div>
+      { isLoading ?
+          <div>Loading ...</div> :
+          results[resultKey].hits.map((item, key) =>
+            <div key={key}>
+              <span><a href={item.url}>{item.title}</a></span>
+              <span>{item.author}</span>
+              <span>{item.num_comments}</span>
+              <span>{item.points}</span>
+            </div>
+          )
+      }
+    </div>
+  );
+}
+
+function InputConfirm({ query, onChange, onSubmit, children }) {
+    return (
+      <form onSubmit={onSubmit}>
+        <input type="text" value={query} onChange={onChange} />
+        <button type="submit">{children}</button>
+      </form>
+    );
 }
 
 export default App;
