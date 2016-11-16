@@ -12,6 +12,7 @@ class App extends Component {
     this.state = {
       result: null,
       query: 'redux',
+      isLoading: true,
     };
 
     this.fetchSearchTopstories = this.fetchSearchTopstories.bind(this);
@@ -20,9 +21,10 @@ class App extends Component {
   }
 
   fetchSearchTopstories(query) {
+    this.setState({ isLoading: true });
     fetch(`${BASE_QUERY}${SEARCH_QUERY}${query}`)
       .then(response => response.json())
-      .then(result => this.setState({ result }));
+      .then(result => this.setState({ result, isLoading: false }));
   }
 
   onSearchChange(event) {
@@ -40,8 +42,8 @@ class App extends Component {
   }
 
   render() {
-    const { result, query } = this.state;
-    console.log(result);
+    const { result, query, isLoading } = this.state;
+
     return (
       <div>
         <form onSubmit={this.onSearchSubmit}>
@@ -54,14 +56,16 @@ class App extends Component {
           <span>Comment Count</span>
           <span>Points</span>
         </div>
-        { !!result && result.hits.map((item, key) =>
-            <div key={key}>
-              <span><a href={item.url}>{item.title}</a></span>
-              <span>{item.author}</span>
-              <span>{item.num_comments}</span>
-              <span>{item.points}</span>
-            </div>
-          )
+        { isLoading ?
+            <div>Loading ...</div> :
+            result.hits.map((item, key) =>
+              <div key={key}>
+                <span><a href={item.url}>{item.title}</a></span>
+                <span>{item.author}</span>
+                <span>{item.num_comments}</span>
+                <span>{item.points}</span>
+              </div>
+            )
         }
       </div>
     );
