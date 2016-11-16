@@ -76,37 +76,31 @@ class App extends Component {
   }
 }
 
-function HitsTable({ results, resultKey, isLoading }) {
-  return (
+const HitsTable = ({ results, resultKey, isLoading }) =>
+  <div>
     <div>
-      <div>
-        <span>Title</span>
-        <span>Author</span>
-        <span>Comment Count</span>
-        <span>Points</span>
-      </div>
-      { isLoading ?
-          <div>Loading ...</div> :
-          results[resultKey].hits.map((item, key) =>
-            <div key={key}>
-              <span><a href={item.url}>{item.title}</a></span>
-              <span>{item.author}</span>
-              <span>{item.num_comments}</span>
-              <span>{item.points}</span>
-            </div>
-          )
-      }
+      <span>Title</span>
+      <span>Author</span>
+      <span>Comment Count</span>
+      <span>Points</span>
     </div>
-  );
-}
+    { isLoading ?
+        <div>Loading ...</div> :
+        results[resultKey].hits.map((item, key) =>
+          <div key={key}>
+            <span><a href={item.url}>{item.title}</a></span>
+            <span>{item.author}</span>
+            <span>{item.num_comments}</span>
+            <span>{item.points}</span>
+          </div>
+        )
+    }
+  </div>
 
-function InputConfirm({ query, onChange, onSubmit, children }) {
-    return (
-      <form onSubmit={onSubmit}>
-        <input type="text" value={query} onChange={onChange} />
-        <button type="submit">{children}</button>
-      </form>
-    );
-}
+const InputConfirm = ({ query, onChange, onSubmit, children }) =>
+  <form onSubmit={onSubmit}>
+    <input type="text" value={query} onChange={onChange} />
+    <button type="submit">{children}</button>
+  </form>
 
 export default App;
