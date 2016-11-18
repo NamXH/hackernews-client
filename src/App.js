@@ -16,6 +16,7 @@ class App extends Component {
       isLoading: true,
     };
 
+    this.setSearchTopstories = this.fetchSearchTopstories.bind(this);
     this.fetchSearchTopstories = this.fetchSearchTopstories.bind(this);
     this.onSearchChange = this.onSearchChange.bind(this);
     this.onSearchSubmit = this.onSearchSubmit.bind(this);
