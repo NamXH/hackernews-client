@@ -15,8 +15,8 @@ const SORTS = {
   NONE: items => items,
   TITLE: items => sortBy(items, 'title'),
   AUTHOR: items => sortBy(items, 'author'),
-  COMMENTS: items => sortBy(items, 'num_comments'),
-  POINTS: items => sortBy(items, 'points'),
+  COMMENTS: items => sortBy(items, 'num_comments').reverse(),
+  POINTS: items => sortBy(items, 'points').reverse(),
 };
 
 class App extends Component {
@@ -30,6 +30,7 @@ class App extends Component {
       resultKey: '',
       isLoading: false,
       sortKey: 'NONE',
+      isSortReverse: false,
     };
 
     this.fetchSearchTopstories = this.fetchSearchTopstories.bind(this);
@@ -78,7 +79,8 @@ class App extends Component {
   }
 
   onSort(sortKey) {
-    this.setState({ sortKey });
+    const isSortReverse = this.state.sortKey === sortKey && !this.state.isSortReverse;
+    this.setState({ sortKey, isSortReverse });
     event.preventDefault();
   }
 
@@ -89,7 +91,7 @@ class App extends Component {
   }
 
   render() {
-    const { results, resultKey, query, isLoading, sortKey } = this.state;
+    const { results, resultKey, query, isLoading, sortKey, isSortReverse } = this.state;
     const page = (results[resultKey] && results[resultKey].page) || 0;
 
     return (
@@ -100,7 +102,13 @@ class App extends Component {
           </InputConfirm>
         </div>
         <div>
-          <HitsTable results={results} resultKey={resultKey} sortKey={sortKey} onSort={this.onSort} />
+          <HitsTable
+            results={results}
+            resultKey={resultKey}
+            sortKey={sortKey}
+            onSort={this.onSort}
+            isSortReverse={isSortReverse}
+          />
         </div>
         <div className="interactions">
           { isLoading ?
@@ -115,35 +123,53 @@ class App extends Component {
   }
 }
 
-const HitsTable = ({ results, resultKey, sortKey, onSort }) =>
-  <div className="table">
-    <div className="table-header">
-      <span style={{ width: '40%' }}>
-        <Sort onSort={() => onSort('TITLE')}>Title</Sort>
-      </span>
-      <span style={{ width: '30%' }}>
-        <Sort onSort={() => onSort('AUTHOR')}>Author</Sort>
-      </span>
-      <span style={{ width: '15%' }}>
-        <Sort onSort={() => onSort('COMMENTS')}>Comments</Sort>
-      </span>
-      <span style={{ width: '15%' }}>
-        <Sort onSort={() => onSort('POINTS')}>Points</Sort>
-      </span>
+const HitsTable = ({ results, resultKey, sortKey, isSortReverse, onSort }) => {
+  const hits = (results[resultKey] && results[resultKey].hits) || [];
+  const sortedHits = SORTS[sortKey](hits);
+  const reverseSortedHits = isSortReverse ? sortedHits.reverse() : sortedHits;
+
+  const onTitleSort = () => onSort('TITLE');
+  const onAuthorSort = () => onSort('AUTHOR');
+  const onCommentsSort = () => onSort('COMMENTS');
+  const onPointsSort = () => onSort('POINTS');
+
+  return (
+    <div className="table">
+      <div className="table-header">
+        <span style={{ width: '40%' }}>
+          <Sort onSort={onTitleSort}>Title</Sort>
+        </span>
+        <span style={{ width: '30%' }}>
+          <Sort onSort={onAuthorSort}>Author</Sort>
+        </span>
+        <span style={{ width: '15%' }}>
+          <Sort onSort={onCommentsSort}>Comments</Sort>
+        </span>
+        <span style={{ width: '15%' }}>
+          <Sort onSort={onPointsSort}>Points</Sort>
+        </span>
+      </div>
+      <div>
+        { map(reverseSortedHits, (item, key) =>
+          <div className="table-row" key={key}>
+            <span style={{ width: '40%' }}>
+              <a href={item.url}>{item.title}</a>
+            </span>
+            <span style={{ width: '30%' }}>
+              {item.author}
+            </span>
+            <span style={{ width: '15%' }}>
+              {item.num_comments}
+            </span>
+            <span style={{ width: '15%' }}>
+              {item.points}
+            </span>
+          </div>
+        )}
+      </div>
     </div>
-    <div>
-      { results[resultKey] &&
-          map(SORTS[sortKey](results[resultKey].hits), (item, key) =>
-            <div className="table-row" key={key}>
-              <span style={{ width: '40%' }}><a href={item.url}>{item.title}</a></span>
-              <span style={{ width: '30%' }}>{item.author}</span>
-              <span style={{ width: '15%' }}>{item.num_comments}</span>
-              <span style={{ width: '15%' }}>{item.points}</span>
-            </div>
-          )
-      }
-    </div>
-  </div>
+  );
+}
 
 const Sort = ({ onSort, children }) =>
   <button onClick={onSort} className="button-inline" type="button">
