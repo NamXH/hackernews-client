@@ -1,14 +1,23 @@
 import React, { Component } from 'react';
+import { sortBy, map } from 'lodash';
 import './App.css';
 
-const QUERY_DEFAULT = 'redux';
-const HPP_DEFAULT = '100';
+const DEFAULT_QUERY = 'redux';
+const DEFAULT_HPP = '100';
 
-const BASE_PATH = 'https://hn.algolia.com/api/v1';
-const SEARCH_PATH = '/search';
-const SEARCH_PARAM = 'query=';
-const PAGE_PARAM = 'page=';
-const HPP_PARAM = 'hitsPerPage=';
+const PATH_BASE = 'https://hn.algolia.com/api/v1';
+const PATH_SEARCH = '/search';
+const PARAM_SEARCH = 'query=';
+const PARAM_PAGE = 'page=';
+const PARAM_HPP = 'hitsPerPage=';
+
+const SORTS = {
+  NONE: items => items,
+  TITLE: items => sortBy(items, 'title'),
+  AUTHOR: items => sortBy(items, 'author'),
+  COMMENTS: items => sortBy(items, 'num_comments'),
+  POINTS: items => sortBy(items, 'points'),
+};
 
 class App extends Component {
 
@@ -20,11 +29,13 @@ class App extends Component {
       query: '',
       resultKey: '',
       isLoading: false,
+      sortKey: 'NONE',
     };
 
     this.fetchSearchTopstories = this.fetchSearchTopstories.bind(this);
     this.needsToFetchSearchTopstories = this.needsToFetchSearchTopstories.bind(this);
     this.onSearchChange = this.onSearchChange.bind(this);
+    this.onSort = this.onSort.bind(this);
     this.onSearchSubmit = this.onSearchSubmit.bind(this);
   }
 
@@ -41,10 +52,10 @@ class App extends Component {
     });
   }
 
-  fetchSearchTopstories(query = QUERY_DEFAULT, page = 0) {
+  fetchSearchTopstories(query = DEFAULT_QUERY, page = 0) {
     this.setState({ isLoading: true });
 
-    fetch(`${BASE_PATH}${SEARCH_PATH}?${SEARCH_PARAM}${query}&${PAGE_PARAM}${page}&${HPP_PARAM}${HPP_DEFAULT}`)
+    fetch(`${PATH_BASE}${PATH_SEARCH}?${PARAM_SEARCH}${query}&${PARAM_PAGE}${page}&${PARAM_HPP}${DEFAULT_HPP}`)
       .then(response => response.json())
       .then(result => this.setSearchTopstories(result, query));
   }
@@ -53,7 +64,7 @@ class App extends Component {
     this.setState({ query: event.target.value });
   }
 
-  needsToFetchSearchTopstories(query = QUERY_DEFAULT) {
+  needsToFetchSearchTopstories(query = DEFAULT_QUERY) {
     this.setState({ resultKey: query });
     return !this.state.results[query];
   }
@@ -66,6 +77,11 @@ class App extends Component {
     event.preventDefault();
   }
 
+  onSort(sortKey) {
+    this.setState({ sortKey });
+    event.preventDefault();
+  }
+
   componentDidMount() {
     if(this.needsToFetchSearchTopstories()) {
       this.fetchSearchTopstories();
@@ -73,7 +89,7 @@ class App extends Component {
   }
 
   render() {
-    const { results, resultKey, query, isLoading } = this.state;
+    const { results, resultKey, query, isLoading, sortKey } = this.state;
     const page = (results[resultKey] && results[resultKey].page) || 0;
 
     return (
@@ -84,7 +100,7 @@ class App extends Component {
           </InputConfirm>
         </div>
         <div>
-          <HitsTable results={results} resultKey={resultKey} />
+          <HitsTable results={results} resultKey={resultKey} sortKey={sortKey} onSort={this.onSort} />
         </div>
         <div className="interactions">
           { isLoading ?
@@ -99,17 +115,25 @@ class App extends Component {
   }
 }
 
-const HitsTable = ({ results, resultKey }) =>
+const HitsTable = ({ results, resultKey, sortKey, onSort }) =>
   <div className="table">
     <div className="table-header">
-      <span style={{ width: '40%' }}>Title</span>
-      <span style={{ width: '30%' }}>Author</span>
-      <span style={{ width: '15%' }}>Comments</span>
-      <span style={{ width: '15%' }}>Points</span>
+      <span style={{ width: '40%' }}>
+        <Sort onSort={() => onSort('TITLE')}>Title</Sort>
+      </span>
+      <span style={{ width: '30%' }}>
+        <Sort onSort={() => onSort('AUTHOR')}>Author</Sort>
+      </span>
+      <span style={{ width: '15%' }}>
+        <Sort onSort={() => onSort('COMMENTS')}>Comments</Sort>
+      </span>
+      <span style={{ width: '15%' }}>
+        <Sort onSort={() => onSort('POINTS')}>Points</Sort>
+      </span>
     </div>
     <div>
       { results[resultKey] &&
-          results[resultKey].hits.map((item, key) =>
+          map(SORTS[sortKey](results[resultKey].hits), (item, key) =>
             <div className="table-row" key={key}>
               <span style={{ width: '40%' }}><a href={item.url}>{item.title}</a></span>
               <span style={{ width: '30%' }}>{item.author}</span>
@@ -120,6 +144,11 @@ const HitsTable = ({ results, resultKey }) =>
       }
     </div>
   </div>
+
+const Sort = ({ onSort, children }) =>
+  <button onClick={onSort} className="button-inline" type="button">
+    {children}
+  </button>
 
 const MoreButton = ({ onClick, resultKey, page, children }) =>
   <button onClick={() => onClick(resultKey, page + 1)} type="button">
