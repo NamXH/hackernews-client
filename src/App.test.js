@@ -12,6 +12,14 @@ describe('App', () => {
     ReactDOM.render(<App />, div);
   });
 
+  test('snapshots', () => {
+    const component = renderer.create(
+      <App />
+    );
+    let tree = component.toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+
 });
 
 describe('InputConfirm', () => {
@@ -19,6 +27,14 @@ describe('InputConfirm', () => {
   it('renders', () => {
     const div = document.createElement('div');
     ReactDOM.render(<InputConfirm>Confirm Me</InputConfirm>, div);
+  });
+
+  test('snapshots', () => {
+    const component = renderer.create(
+      <InputConfirm>Confirm Me</InputConfirm>
+    );
+    let tree = component.toJSON();
+    expect(tree).toMatchSnapshot();
   });
 
 });
@@ -30,6 +46,14 @@ describe('Sort', () => {
     ReactDOM.render(<Sort>Sort Me</Sort>, div);
   });
 
+  test('snapshots', () => {
+    const component = renderer.create(
+      <Sort>Sort Me</Sort>
+    );
+    let tree = component.toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+
 });
 
 describe('MoreButton', () => {
@@ -37,6 +61,14 @@ describe('MoreButton', () => {
   it('renders', () => {
     const div = document.createElement('div');
     ReactDOM.render(<MoreButton>Give Me More</MoreButton>, div);
+  });
+
+  test('snapshots', () => {
+    const component = renderer.create(
+      <MoreButton>Give Me More</MoreButton>
+    );
+    let tree = component.toJSON();
+    expect(tree).toMatchSnapshot();
   });
 
 });
@@ -58,6 +90,14 @@ describe('HitsTable', () => {
   it('renders', () => {
     const div = document.createElement('div');
     ReactDOM.render(<HitsTable { ...props } />, div);
+  });
+
+  test('snapshots', () => {
+    const component = renderer.create(
+      <HitsTable { ...props } />
+    );
+    let tree = component.toJSON();
+    expect(tree).toMatchSnapshot();
   });
 
 });
