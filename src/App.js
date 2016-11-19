@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { sortBy, map } from 'lodash';
+import classNames from 'classnames';
 import './App.css';
 
 const DEFAULT_QUERY = 'redux';
@@ -128,25 +129,20 @@ const HitsTable = ({ results, resultKey, sortKey, isSortReverse, onSort }) => {
   const sortedHits = SORTS[sortKey](hits);
   const reverseSortedHits = isSortReverse ? sortedHits.reverse() : sortedHits;
 
-  const onTitleSort = () => onSort('TITLE');
-  const onAuthorSort = () => onSort('AUTHOR');
-  const onCommentsSort = () => onSort('COMMENTS');
-  const onPointsSort = () => onSort('POINTS');
-
   return (
     <div className="table">
       <div className="table-header">
         <span style={{ width: '40%' }}>
-          <Sort onSort={onTitleSort}>Title</Sort>
+          <Sort sortKey={'TITLE'} activeSortKey={sortKey} onSort={onSort}>Title</Sort>
         </span>
         <span style={{ width: '30%' }}>
-          <Sort onSort={onAuthorSort}>Author</Sort>
+          <Sort sortKey={'AUTHOR'} activeSortKey={sortKey} onSort={onSort}>Author</Sort>
         </span>
         <span style={{ width: '15%' }}>
-          <Sort onSort={onCommentsSort}>Comments</Sort>
+          <Sort sortKey={'COMMENTS'} activeSortKey={sortKey} onSort={onSort}>Comments</Sort>
         </span>
         <span style={{ width: '15%' }}>
-          <Sort onSort={onPointsSort}>Points</Sort>
+          <Sort sortKey={'POINTS'} activeSortKey={sortKey} onSort={onSort}>Points</Sort>
         </span>
       </div>
       <div>
@@ -171,10 +167,15 @@ const HitsTable = ({ results, resultKey, sortKey, isSortReverse, onSort }) => {
   );
 }
 
-const Sort = ({ onSort, children }) =>
-  <button onClick={onSort} className="button-inline" type="button">
-    {children}
-  </button>
+const Sort = ({ onSort, sortKey, activeSortKey, children }) => {
+  const sortClass = classNames('button-inline', { 'button-active': sortKey === activeSortKey });
+
+  return (
+    <button onClick={() => onSort(sortKey)} className={sortClass} type="button">
+      {children}
+    </button>
+  );
+}
 
 const MoreButton = ({ onClick, resultKey, page, children }) =>
   <button onClick={() => onClick(resultKey, page + 1)} type="button">
