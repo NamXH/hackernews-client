@@ -190,3 +190,10 @@ const InputConfirm = ({ query, onChange, onSubmit, children }) =>
   </form>
 
 export default App;
+
+export {
+  InputConfirm,
+  MoreButton,
+  Sort,
+  HitsTable,
+};

@@ -3,7 +3,8 @@
   "version": "0.0.1",
   "private": true,
   "devDependencies": {
-    "react-scripts": "0.7.0"
+    "react-scripts": "0.7.0",
+    "react-test-renderer": "^15.4.0"
   },
   "dependencies": {
     "lodash": "^4.17.2",
