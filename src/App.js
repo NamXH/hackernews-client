@@ -113,12 +113,13 @@ class App extends Component {
           />
         </div>
         <div className="interactions">
-          { isLoading ?
-            <div>Loading ...</div> :
-            <MoreButton onClick={this.fetchSearchTopstories} resultKey={resultKey} page={page}>
-              More
-            </MoreButton>
-          }
+          <MoreButtonWithLoading
+            isLoading={isLoading}
+            onClick={this.fetchSearchTopstories}
+            resultKey={resultKey}
+            page={page}>
+            More
+          </MoreButtonWithLoading>
         </div>
       </div>
     );
@@ -182,6 +183,14 @@ const MoreButton = ({ onClick, resultKey, page, children }) =>
   <button onClick={() => onClick(resultKey, page + 1)} type="button">
     {children}
   </button>
+
+const withLoading = (Component) => ({ isLoading, ...props }) =>
+  isLoading ? <Loading /> : <Component { ...props } />;
+
+const Loading = () =>
+  <div>Loading ...</div>
+
+const MoreButtonWithLoading = withLoading(MoreButton);
 
 const InputConfirm = ({ query, onChange, onSubmit, children }) =>
   <form onSubmit={onSubmit}>
