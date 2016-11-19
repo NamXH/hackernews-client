@@ -27,13 +27,14 @@ class App extends Component {
 
     this.state = {
       results: {},
-      query: '',
+      query: DEFAULT_QUERY,
       resultKey: '',
       isLoading: false,
       sortKey: 'NONE',
       isSortReverse: false,
     };
 
+    this.setSearchTopstories = this.setSearchTopstories.bind(this);
     this.fetchSearchTopstories = this.fetchSearchTopstories.bind(this);
     this.needsToFetchSearchTopstories = this.needsToFetchSearchTopstories.bind(this);
     this.onSearchChange = this.onSearchChange.bind(this);
