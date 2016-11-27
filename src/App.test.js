@@ -1,9 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import renderer from 'react-test-renderer';
-
 import App from './App';
-import { InputConfirm, MoreButton, Sort, HitsTable } from './App'
+import { Search, Button, Table } from './App'
 
 describe('App', () => {
 
@@ -22,16 +21,16 @@ describe('App', () => {
 
 });
 
-describe('InputConfirm', () => {
+describe('Search', () => {
 
   it('renders', () => {
     const div = document.createElement('div');
-    ReactDOM.render(<InputConfirm>Confirm Me</InputConfirm>, div);
+    ReactDOM.render(<Search>Search</Search>, div);
   });
 
   test('snapshots', () => {
     const component = renderer.create(
-      <InputConfirm>Confirm Me</InputConfirm>
+      <Search>Search</Search>
     );
     let tree = component.toJSON();
     expect(tree).toMatchSnapshot();
@@ -39,16 +38,16 @@ describe('InputConfirm', () => {
 
 });
 
-describe('Sort', () => {
+describe('Button', () => {
 
   it('renders', () => {
     const div = document.createElement('div');
-    ReactDOM.render(<Sort>Sort Me</Sort>, div);
+    ReactDOM.render(<Button>Give Me More</Button>, div);
   });
 
   test('snapshots', () => {
     const component = renderer.create(
-      <Sort>Sort Me</Sort>
+      <Button>Give Me More</Button>
     );
     let tree = component.toJSON();
     expect(tree).toMatchSnapshot();
@@ -56,45 +55,28 @@ describe('Sort', () => {
 
 });
 
-describe('MoreButton', () => {
-
-  it('renders', () => {
-    const div = document.createElement('div');
-    ReactDOM.render(<MoreButton>Give Me More</MoreButton>, div);
-  });
-
-  test('snapshots', () => {
-    const component = renderer.create(
-      <MoreButton>Give Me More</MoreButton>
-    );
-    let tree = component.toJSON();
-    expect(tree).toMatchSnapshot();
-  });
-
-});
-
-describe('HitsTable', () => {
+describe('Table', () => {
 
   const props = {
     results: {
-      someResultKey: {
+      someSearchKey: {
         hits: [
           { title: 'a', author: 'b', num_comments: 1, points: 2 }
         ],
       }
     },
-    resultKey: 'someResultKey',
+    searchKey: 'someSearchKey',
     sortKey: 'NONE',
   };
 
   it('renders', () => {
     const div = document.createElement('div');
-    ReactDOM.render(<HitsTable { ...props } />, div);
+    ReactDOM.render(<Table { ...props } />, div);
   });
 
   test('snapshots', () => {
     const component = renderer.create(
-      <HitsTable { ...props } />
+      <Table { ...props } />
     );
     let tree = component.toJSON();
     expect(tree).toMatchSnapshot();

@@ -85,108 +85,16 @@ exports[`App snapshots 1`] = `
 </div>
 `;
 
-exports[`HitsTable snapshots 1`] = `
-<div
-  className="table">
-  <div
-    className="table-header">
-    <span
-      style={
-        Object {
-          "width": "40%",
-        }
-      }>
-      <button
-        className="button-inline"
-        onClick={[Function]}
-        type="button">
-        Title
-      </button>
-    </span>
-    <span
-      style={
-        Object {
-          "width": "30%",
-        }
-      }>
-      <button
-        className="button-inline"
-        onClick={[Function]}
-        type="button">
-        Author
-      </button>
-    </span>
-    <span
-      style={
-        Object {
-          "width": "15%",
-        }
-      }>
-      <button
-        className="button-inline"
-        onClick={[Function]}
-        type="button">
-        Comments
-      </button>
-    </span>
-    <span
-      style={
-        Object {
-          "width": "15%",
-        }
-      }>
-      <button
-        className="button-inline"
-        onClick={[Function]}
-        type="button">
-        Points
-      </button>
-    </span>
-  </div>
-  <div>
-    <div
-      className="table-row">
-      <span
-        style={
-          Object {
-            "width": "40%",
-          }
-        }>
-        <a
-          href={undefined}>
-          a
-        </a>
-      </span>
-      <span
-        style={
-          Object {
-            "width": "30%",
-          }
-        }>
-        b
-      </span>
-      <span
-        style={
-          Object {
-            "width": "15%",
-          }
-        }>
-        1
-      </span>
-      <span
-        style={
-          Object {
-            "width": "15%",
-          }
-        }>
-        2
-      </span>
-    </div>
-  </div>
-</div>
+exports[`Button snapshots 1`] = `
+<button
+  className={undefined}
+  onClick={undefined}
+  type="button">
+  Give Me More
+</button>
 `;
 
-exports[`InputConfirm snapshots 1`] = `
+exports[`Search snapshots 1`] = `
 <form
   onSubmit={undefined}>
   <input
@@ -195,24 +103,7 @@ exports[`InputConfirm snapshots 1`] = `
     value={undefined} />
   <button
     type="submit">
-    Confirm Me
+    Search
   </button>
 </form>
-`;
-
-exports[`MoreButton snapshots 1`] = `
-<button
-  onClick={[Function]}
-  type="button">
-  Give Me More
-</button>
-`;
-
-exports[`Sort snapshots 1`] = `
-<button
-  className="button-inline button-active"
-  onClick={[Function]}
-  type="button">
-  Sort Me
-</button>
 `;

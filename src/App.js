@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { sortBy, map } from 'lodash';
+import { sortBy } from 'lodash';
 import classNames from 'classnames';
 import './App.css';
 
 const DEFAULT_QUERY = 'redux';
+const DEFAULT_PAGE = 0;
 const DEFAULT_HPP = '100';
 
 const PATH_BASE = 'https://hn.algolia.com/api/v1';
@@ -13,22 +14,22 @@ const PARAM_PAGE = 'page=';
 const PARAM_HPP = 'hitsPerPage=';
 
 const SORTS = {
-  NONE: items => items,
-  TITLE: items => sortBy(items, 'title'),
-  AUTHOR: items => sortBy(items, 'author'),
-  COMMENTS: items => sortBy(items, 'num_comments').reverse(),
-  POINTS: items => sortBy(items, 'points').reverse(),
+  NONE: list => list,
+  TITLE: list => sortBy(list, 'title'),
+  AUTHOR: list => sortBy(list, 'author'),
+  COMMENTS: list => sortBy(list, 'num_comments').reverse(),
+  POINTS: list => sortBy(list, 'points').reverse(),
 };
 
 class App extends Component {
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.state = {
-      results: {},
+      results: null,
       query: DEFAULT_QUERY,
-      resultKey: '',
+      searchKey: '',
       isLoading: false,
       sortKey: 'NONE',
       isSortReverse: false,
@@ -36,141 +37,134 @@ class App extends Component {
 
     this.setSearchTopstories = this.setSearchTopstories.bind(this);
     this.fetchSearchTopstories = this.fetchSearchTopstories.bind(this);
-    this.needsToFetchSearchTopstories = this.needsToFetchSearchTopstories.bind(this);
     this.onSearchChange = this.onSearchChange.bind(this);
-    this.onSort = this.onSort.bind(this);
     this.onSearchSubmit = this.onSearchSubmit.bind(this);
+    this.onSort = this.onSort.bind(this);
   }
 
-  setSearchTopstories(result, query) {
-    const { hits, page } = result;
-    const { results } = this.state;
+  onSearchSubmit(event) {
+    const { query } = this.state;
+    this.setState({ searchKey: query });
+    this.fetchSearchTopstories(query, DEFAULT_PAGE);
+    event.preventDefault();
+  }
 
-    const oldHits = page === 0 ? [] : results[query].hits;
+  setSearchTopstories(result) {
+    const { hits, page } = result;
+    const { searchKey } = this.state;
+
+    const oldHits = page === 0 ? [] : this.state.results[searchKey].hits;
     const updatedHits = [ ...oldHits, ...hits ];
 
     this.setState({
-      results: { ...results, [query]: { hits: updatedHits, page } },
+      results: { ...this.state.results, [searchKey]: { hits: updatedHits, page } },
       isLoading: false
     });
   }
 
-  fetchSearchTopstories(query = DEFAULT_QUERY, page = 0) {
+  fetchSearchTopstories(query, page) {
     this.setState({ isLoading: true });
 
     fetch(`${PATH_BASE}${PATH_SEARCH}?${PARAM_SEARCH}${query}&${PARAM_PAGE}${page}&${PARAM_HPP}${DEFAULT_HPP}`)
       .then(response => response.json())
-      .then(result => this.setSearchTopstories(result, query));
+      .then(result => this.setSearchTopstories(result));
   }
 
   onSearchChange(event) {
     this.setState({ query: event.target.value });
   }
 
-  needsToFetchSearchTopstories(query = DEFAULT_QUERY) {
-    this.setState({ resultKey: query });
-    return !this.state.results[query];
-  }
-
-  onSearchSubmit(event) {
-    const { query } = this.state;
-    if(this.needsToFetchSearchTopstories(query)) {
-      this.fetchSearchTopstories(query);
-    }
-    event.preventDefault();
-  }
-
   onSort(sortKey) {
     const isSortReverse = this.state.sortKey === sortKey && !this.state.isSortReverse;
     this.setState({ sortKey, isSortReverse });
-    event.preventDefault();
   }
 
   componentDidMount() {
-    if(this.needsToFetchSearchTopstories()) {
-      this.fetchSearchTopstories();
-    }
+    const { query } = this.state;
+    this.setState({ searchKey: query });
+    this.fetchSearchTopstories(query, DEFAULT_PAGE);
   }
 
   render() {
-    const { results, resultKey, query, isLoading, sortKey, isSortReverse } = this.state;
-    const page = (results[resultKey] && results[resultKey].page) || 0;
-
+    const { query, results, searchKey, isLoading, sortKey, isSortReverse } = this.state;
+    const page = (results && results[searchKey] && results[searchKey].page) || 0;
+    const list = (results && results[searchKey] && results[searchKey].hits) || [];
     return (
       <div className="page">
         <div className="interactions">
-          <InputConfirm query={query} onChange={this.onSearchChange} onSubmit={this.onSearchSubmit}>
+          <Search value={query} onChange={this.onSearchChange} onSubmit={this.onSearchSubmit}>
             Search
-          </InputConfirm>
+          </Search>
         </div>
-        <div>
-          <HitsTable
-            results={results}
-            resultKey={resultKey}
-            sortKey={sortKey}
-            onSort={this.onSort}
-            isSortReverse={isSortReverse}
-          />
-        </div>
+        <Table
+          list={list}
+          sortKey={sortKey}
+          isSortReverse={isSortReverse}
+          onSort={this.onSort}
+        />
         <div className="interactions">
-          <MoreButtonWithLoading
+          <ButtonWithLoading
             isLoading={isLoading}
-            onClick={this.fetchSearchTopstories}
-            resultKey={resultKey}
-            page={page}>
+            onClick={() => this.fetchSearchTopstories(searchKey, page + 1)}>
             More
-          </MoreButtonWithLoading>
+          </ButtonWithLoading>
         </div>
       </div>
     );
   }
 }
 
-const HitsTable = ({ results, resultKey, sortKey, isSortReverse, onSort }) => {
-  const hits = (results[resultKey] && results[resultKey].hits) || [];
-  const sortedHits = SORTS[sortKey](hits);
-  const reverseSortedHits = isSortReverse ? sortedHits.reverse() : sortedHits;
+const Search = ({ value, onChange, onSubmit, children }) =>
+  <form onSubmit={onSubmit}>
+    <input type="text" value={value} onChange={onChange} />
+    <button type="submit">{children}</button>
+  </form>
 
-  return (
+const Table = ({ list, sortKey, isSortReverse, onSort }) => {
+  const sortedList = SORTS[sortKey](list);
+  const reverseSortedList = isSortReverse ? sortedList.reverse() : sortedList;
+
+  return(
     <div className="table">
       <div className="table-header">
         <span style={{ width: '40%' }}>
-          <Sort sortKey={'TITLE'} activeSortKey={sortKey} onSort={onSort}>Title</Sort>
+          <Sort sortKey={'TITLE'} onSort={onSort} activeSortKey={sortKey}>Title</Sort>
         </span>
         <span style={{ width: '30%' }}>
-          <Sort sortKey={'AUTHOR'} activeSortKey={sortKey} onSort={onSort}>Author</Sort>
+          <Sort sortKey={'AUTHOR'} onSort={onSort} activeSortKey={sortKey}>Author</Sort>
         </span>
         <span style={{ width: '15%' }}>
-          <Sort sortKey={'COMMENTS'} activeSortKey={sortKey} onSort={onSort}>Comments</Sort>
+          <Sort sortKey={'COMMENTS'} onSort={onSort} activeSortKey={sortKey}>Comments</Sort>
         </span>
         <span style={{ width: '15%' }}>
-          <Sort sortKey={'POINTS'} activeSortKey={sortKey} onSort={onSort}>Points</Sort>
+          <Sort sortKey={'POINTS'} onSort={onSort} activeSortKey={sortKey}>Points</Sort>
         </span>
       </div>
-      <div>
-        { map(reverseSortedHits, (item, key) =>
-          <div className="table-row" key={key}>
-            <span style={{ width: '40%' }}>
-              <a href={item.url}>{item.title}</a>
-            </span>
-            <span style={{ width: '30%' }}>
-              {item.author}
-            </span>
-            <span style={{ width: '15%' }}>
-              {item.num_comments}
-            </span>
-            <span style={{ width: '15%' }}>
-              {item.points}
-            </span>
-          </div>
-        )}
-      </div>
+      { reverseSortedList.map((item) =>
+        <div key={item.objectID} className="table-row">
+          <span style={{ width: '40%' }}>
+            <a href={item.url}>{item.title}</a>
+          </span>
+          <span style={{ width: '30%' }}>
+            {item.author}
+          </span>
+          <span style={{ width: '15%' }}>
+            {item.num_comments}
+          </span>
+          <span style={{ width: '15%' }}>
+            {item.points}
+          </span>
+        </div>
+      )}
     </div>
   );
 }
 
-const Sort = ({ onSort, sortKey, activeSortKey, children }) => {
-  const sortClass = classNames('button-inline', { 'button-active': sortKey === activeSortKey });
+const Sort = ({ sortKey, activeSortKey, onSort, children }) => {
+  const sortClass = classNames(
+    'button-inline',
+    { 'button-active': sortKey === activeSortKey }
+  );
 
   return (
     <button onClick={() => onSort(sortKey)} className={sortClass} type="button">
@@ -179,30 +173,23 @@ const Sort = ({ onSort, sortKey, activeSortKey, children }) => {
   );
 }
 
-const MoreButton = ({ onClick, resultKey, page, children }) =>
-  <button onClick={() => onClick(resultKey, page + 1)} type="button">
+const Button = ({ onClick, className, children }) =>
+  <button onClick={onClick} className={className} type="button">
     {children}
   </button>
-
-const withLoading = (Component) => ({ isLoading, ...props }) =>
-  isLoading ? <Loading /> : <Component { ...props } />;
 
 const Loading = () =>
   <div>Loading ...</div>
 
-const MoreButtonWithLoading = withLoading(MoreButton);
+const withLoading = (Component) => ({ isLoading, ...props }) =>
+  isLoading ? <Loading /> : <Component { ...props } />;
 
-const InputConfirm = ({ query, onChange, onSubmit, children }) =>
-  <form onSubmit={onSubmit}>
-    <input type="text" value={query} onChange={onChange} />
-    <button type="submit">{children}</button>
-  </form>
+const ButtonWithLoading = withLoading(Button);
 
 export default App;
 
 export {
-  InputConfirm,
-  MoreButton,
-  Sort,
-  HitsTable,
+  Button,
+  Search,
+  Table,
 };
