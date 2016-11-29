@@ -15,65 +15,62 @@ exports[`App snapshots 1`] = `
       </button>
     </form>
   </div>
-  <div>
+  <div
+    className="table">
     <div
-      className="table">
-      <div
-        className="table-header">
-        <span
-          style={
-            Object {
-              "width": "40%",
-            }
-          }>
-          <button
-            className="button-inline"
-            onClick={[Function]}
-            type="button">
-            Title
-          </button>
-        </span>
-        <span
-          style={
-            Object {
-              "width": "30%",
-            }
-          }>
-          <button
-            className="button-inline"
-            onClick={[Function]}
-            type="button">
-            Author
-          </button>
-        </span>
-        <span
-          style={
-            Object {
-              "width": "15%",
-            }
-          }>
-          <button
-            className="button-inline"
-            onClick={[Function]}
-            type="button">
-            Comments
-          </button>
-        </span>
-        <span
-          style={
-            Object {
-              "width": "15%",
-            }
-          }>
-          <button
-            className="button-inline"
-            onClick={[Function]}
-            type="button">
-            Points
-          </button>
-        </span>
-      </div>
-      <div />
+      className="table-header">
+      <span
+        style={
+          Object {
+            "width": "40%",
+          }
+        }>
+        <button
+          className="button-inline"
+          onClick={[Function]}
+          type="button">
+          Title
+        </button>
+      </span>
+      <span
+        style={
+          Object {
+            "width": "30%",
+          }
+        }>
+        <button
+          className="button-inline"
+          onClick={[Function]}
+          type="button">
+          Author
+        </button>
+      </span>
+      <span
+        style={
+          Object {
+            "width": "15%",
+          }
+        }>
+        <button
+          className="button-inline"
+          onClick={[Function]}
+          type="button">
+          Comments
+        </button>
+      </span>
+      <span
+        style={
+          Object {
+            "width": "15%",
+          }
+        }>
+        <button
+          className="button-inline"
+          onClick={[Function]}
+          type="button">
+          Points
+        </button>
+      </span>
     </div>
   </div>
   <div
@@ -106,4 +103,141 @@ exports[`Search snapshots 1`] = `
     Search
   </button>
 </form>
+`;
+
+exports[`Table snapshots 1`] = `
+<div
+  className="table">
+  <div
+    className="table-header">
+    <span
+      style={
+        Object {
+          "width": "40%",
+        }
+      }>
+      <button
+        className="button-inline"
+        onClick={[Function]}
+        type="button">
+        Title
+      </button>
+    </span>
+    <span
+      style={
+        Object {
+          "width": "30%",
+        }
+      }>
+      <button
+        className="button-inline"
+        onClick={[Function]}
+        type="button">
+        Author
+      </button>
+    </span>
+    <span
+      style={
+        Object {
+          "width": "15%",
+        }
+      }>
+      <button
+        className="button-inline"
+        onClick={[Function]}
+        type="button">
+        Comments
+      </button>
+    </span>
+    <span
+      style={
+        Object {
+          "width": "15%",
+        }
+      }>
+      <button
+        className="button-inline"
+        onClick={[Function]}
+        type="button">
+        Points
+      </button>
+    </span>
+  </div>
+  <div
+    className="table-row">
+    <span
+      style={
+        Object {
+          "width": "40%",
+        }
+      }>
+      <a
+        href={undefined}>
+        1
+      </a>
+    </span>
+    <span
+      style={
+        Object {
+          "width": "30%",
+        }
+      }>
+      1
+    </span>
+    <span
+      style={
+        Object {
+          "width": "15%",
+        }
+      }>
+      1
+    </span>
+    <span
+      style={
+        Object {
+          "width": "15%",
+        }
+      }>
+      2
+    </span>
+  </div>
+  <div
+    className="table-row">
+    <span
+      style={
+        Object {
+          "width": "40%",
+        }
+      }>
+      <a
+        href={undefined}>
+        2
+      </a>
+    </span>
+    <span
+      style={
+        Object {
+          "width": "30%",
+        }
+      }>
+      2
+    </span>
+    <span
+      style={
+        Object {
+          "width": "15%",
+        }
+      }>
+      1
+    </span>
+    <span
+      style={
+        Object {
+          "width": "15%",
+        }
+      }>
+      2
+    </span>
+  </div>
+</div>
 `;

@@ -58,15 +58,13 @@ describe('Button', () => {
 describe('Table', () => {
 
   const props = {
-    results: {
-      someSearchKey: {
-        hits: [
-          { title: 'a', author: 'b', num_comments: 1, points: 2 }
-        ],
-      }
-    },
-    searchKey: 'someSearchKey',
+    list: [
+      { title: '1', author: '1', num_comments: 1, points: 2, objectID: 'y' },
+      { title: '2', author: '2', num_comments: 1, points: 2, objectID: 'z' },
+    ],
     sortKey: 'NONE',
+    isSortReverse: false,
+    onSort: () => {},
   };
 
   it('renders', () => {
