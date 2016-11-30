@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import renderer from 'react-test-renderer';
+import { shallow } from 'enzyme';
 import App from './App';
 import { Search, Button, Table } from './App'
 
@@ -78,6 +79,26 @@ describe('Table', () => {
     );
     let tree = component.toJSON();
     expect(tree).toMatchSnapshot();
+  });
+
+  it('shows two items in list', () => {
+      const element = shallow(
+        <Table { ...props } />
+      );
+
+      expect(element.find('.table-row').length).toBe(2);
+
+      expect(element.find('.table-row').first().find('a').text()).toBe('1');
+      expect(element.find('.table-row').last().find('a').text()).toBe('2');
+  });
+
+  it('shows two sorted items in list', () => {
+      const element = shallow(
+        <Table { ...props } isSortReverse={true} />
+      );
+
+      expect(element.find('.table-row').first().find('a').text()).toBe('2');
+      expect(element.find('.table-row').last().find('a').text()).toBe('1');
   });
 
 });
