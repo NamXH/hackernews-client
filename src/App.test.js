@@ -63,9 +63,6 @@ describe('Table', () => {
       { title: '1', author: '1', num_comments: 1, points: 2, objectID: 'y' },
       { title: '2', author: '2', num_comments: 1, points: 2, objectID: 'z' },
     ],
-    sortKey: 'NONE',
-    isSortReverse: false,
-    onSort: () => {},
   };
 
   it('renders', () => {
@@ -87,18 +84,6 @@ describe('Table', () => {
       );
 
       expect(element.find('.table-row').length).toBe(2);
-
-      expect(element.find('.table-row').first().find('a').text()).toBe('1');
-      expect(element.find('.table-row').last().find('a').text()).toBe('2');
-  });
-
-  it('shows two sorted items in list', () => {
-      const element = shallow(
-        <Table { ...props } isSortReverse={true} />
-      );
-
-      expect(element.find('.table-row').first().find('a').text()).toBe('2');
-      expect(element.find('.table-row').last().find('a').text()).toBe('1');
   });
 
 });

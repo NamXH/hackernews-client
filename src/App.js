@@ -37,16 +37,10 @@ class App extends Component {
 
     this.setSearchTopstories = this.setSearchTopstories.bind(this);
     this.fetchSearchTopstories = this.fetchSearchTopstories.bind(this);
+    this.needsToSearchTopstories = this.needsToSearchTopstories.bind(this);
     this.onSearchChange = this.onSearchChange.bind(this);
     this.onSearchSubmit = this.onSearchSubmit.bind(this);
     this.onSort = this.onSort.bind(this);
-  }
-
-  onSearchSubmit(event) {
-    const { query } = this.state;
-    this.setState({ searchKey: query });
-    this.fetchSearchTopstories(query, DEFAULT_PAGE);
-    event.preventDefault();
   }
 
   setSearchTopstories(result) {
@@ -70,19 +64,32 @@ class App extends Component {
       .then(result => this.setSearchTopstories(result));
   }
 
+  componentDidMount() {
+    const { query } = this.state;
+    this.setState({ searchKey: query });
+    this.fetchSearchTopstories(query, DEFAULT_PAGE);
+  }
+
+  needsToSearchTopstories(query) {
+    return !this.state.results[query];
+  }
+
   onSearchChange(event) {
     this.setState({ query: event.target.value });
+  }
+
+  onSearchSubmit(event) {
+    const { query } = this.state;
+    this.setState({ searchKey: query });
+    if (this.needsToSearchTopstories(query)) {
+      this.fetchSearchTopstories(query, DEFAULT_PAGE);
+    }
+    event.preventDefault();
   }
 
   onSort(sortKey) {
     const isSortReverse = this.state.sortKey === sortKey && !this.state.isSortReverse;
     this.setState({ sortKey, isSortReverse });
-  }
-
-  componentDidMount() {
-    const { query } = this.state;
-    this.setState({ searchKey: query });
-    this.fetchSearchTopstories(query, DEFAULT_PAGE);
   }
 
   render() {
