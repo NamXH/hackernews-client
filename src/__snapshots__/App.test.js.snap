@@ -16,75 +16,22 @@ exports[`App snapshots 1`] = `
     </form>
   </div>
   <div
-    className="table">
-    <div
-      className="table-header">
-      <span
-        style={
-          Object {
-            "width": "40%",
-          }
-        }>
-        <button
-          className="button-inline"
-          onClick={[Function]}
-          type="button">
-          Title
-        </button>
-      </span>
-      <span
-        style={
-          Object {
-            "width": "30%",
-          }
-        }>
-        <button
-          className="button-inline"
-          onClick={[Function]}
-          type="button">
-          Author
-        </button>
-      </span>
-      <span
-        style={
-          Object {
-            "width": "15%",
-          }
-        }>
-        <button
-          className="button-inline"
-          onClick={[Function]}
-          type="button">
-          Comments
-        </button>
-      </span>
-      <span
-        style={
-          Object {
-            "width": "15%",
-          }
-        }>
-        <button
-          className="button-inline"
-          onClick={[Function]}
-          type="button">
-          Points
-        </button>
-      </span>
-    </div>
-  </div>
+    className="table" />
   <div
     className="interactions">
-    <div>
-      Loading ...
-    </div>
+    <button
+      className=""
+      onClick={[Function]}
+      type="button">
+      More
+    </button>
   </div>
 </div>
 `;
 
 exports[`Button snapshots 1`] = `
 <button
-  className={undefined}
+  className=""
   onClick={undefined}
   type="button">
   Give Me More
@@ -109,61 +56,6 @@ exports[`Table snapshots 1`] = `
 <div
   className="table">
   <div
-    className="table-header">
-    <span
-      style={
-        Object {
-          "width": "40%",
-        }
-      }>
-      <button
-        className="button-inline"
-        onClick={[Function]}
-        type="button">
-        Title
-      </button>
-    </span>
-    <span
-      style={
-        Object {
-          "width": "30%",
-        }
-      }>
-      <button
-        className="button-inline"
-        onClick={[Function]}
-        type="button">
-        Author
-      </button>
-    </span>
-    <span
-      style={
-        Object {
-          "width": "15%",
-        }
-      }>
-      <button
-        className="button-inline"
-        onClick={[Function]}
-        type="button">
-        Comments
-      </button>
-    </span>
-    <span
-      style={
-        Object {
-          "width": "15%",
-        }
-      }>
-      <button
-        className="button-inline"
-        onClick={[Function]}
-        type="button">
-        Points
-      </button>
-    </span>
-  </div>
-  <div
     className="table-row">
     <span
       style={
@@ -187,7 +79,7 @@ exports[`Table snapshots 1`] = `
     <span
       style={
         Object {
-          "width": "15%",
+          "width": "10%",
         }
       }>
       1
@@ -195,10 +87,23 @@ exports[`Table snapshots 1`] = `
     <span
       style={
         Object {
-          "width": "15%",
+          "width": "10%",
         }
       }>
       2
+    </span>
+    <span
+      style={
+        Object {
+          "width": "10%",
+        }
+      }>
+      <button
+        className="button-inline"
+        onClick={[Function]}
+        type="button">
+        Dismiss
+      </button>
     </span>
   </div>
   <div
@@ -225,7 +130,7 @@ exports[`Table snapshots 1`] = `
     <span
       style={
         Object {
-          "width": "15%",
+          "width": "10%",
         }
       }>
       1
@@ -233,10 +138,23 @@ exports[`Table snapshots 1`] = `
     <span
       style={
         Object {
-          "width": "15%",
+          "width": "10%",
         }
       }>
       2
+    </span>
+    <span
+      style={
+        Object {
+          "width": "10%",
+        }
+      }>
+      <button
+        className="button-inline"
+        onClick={[Function]}
+        type="button">
+        Dismiss
+      </button>
     </span>
   </div>
 </div>
