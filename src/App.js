@@ -29,7 +29,7 @@ class App extends Component {
     this.state = {
       results: null,
       searchKey: '',
-      query: DEFAULT_QUERY,
+      searchTerm: DEFAULT_QUERY,
       isLoading: false,
       sortKey: 'NONE',
       isSortReverse: false,
@@ -49,16 +49,16 @@ class App extends Component {
     this.setState({ sortKey, isSortReverse });
   }
 
-  needsToSearchTopstories(query) {
-    return !this.state.results[query];
+  needsToSearchTopstories(searchTerm) {
+    return !this.state.results[searchTerm];
   }
 
   onSearchSubmit(event) {
-    const { query } = this.state;
-    this.setState({ searchKey: query });
+    const { searchTerm } = this.state;
+    this.setState({ searchKey: searchTerm });
 
-    if (this.needsToSearchTopstories(query)) {
-      this.fetchSearchTopstories(query, DEFAULT_PAGE);
+    if (this.needsToSearchTopstories(searchTerm)) {
+      this.fetchSearchTopstories(searchTerm, DEFAULT_PAGE);
     }
 
     event.preventDefault();
@@ -86,18 +86,18 @@ class App extends Component {
     });
   }
 
-  fetchSearchTopstories(query, page) {
+  fetchSearchTopstories(searchTerm, page) {
     this.setState({ isLoading: true });
 
-    fetch(`${PATH_BASE}${PATH_SEARCH}?${PARAM_SEARCH}${query}&${PARAM_PAGE}${page}&${PARAM_HPP}${DEFAULT_HPP}`)
+    fetch(`${PATH_BASE}${PATH_SEARCH}?${PARAM_SEARCH}${searchTerm}&${PARAM_PAGE}${page}&${PARAM_HPP}${DEFAULT_HPP}`)
       .then(response => response.json())
       .then(result => this.setSearchTopstories(result));
   }
 
   componentDidMount() {
-    const { query } = this.state;
-    this.setState({ searchKey: query });
-    this.fetchSearchTopstories(query, DEFAULT_PAGE);
+    const { searchTerm } = this.state;
+    this.setState({ searchKey: searchTerm });
+    this.fetchSearchTopstories(searchTerm, DEFAULT_PAGE);
   }
 
   onDismiss(id) {
@@ -116,25 +116,26 @@ class App extends Component {
   }
 
   onSearchChange(event) {
-    this.setState({ query: event.target.value });
+    this.setState({ searchTerm: event.target.value });
   }
 
   render() {
     const {
-      query,
+      searchTerm,
       results,
       searchKey,
       isLoading,
       sortKey,
       isSortReverse
     } = this.state;
+
     const page = (results && results[searchKey] && results[searchKey].page) || 0;
     const list = (results && results[searchKey] && results[searchKey].hits) || [];
     return (
       <div className="page">
         <div className="interactions">
           <Search
-            value={query}
+            value={searchTerm}
             onChange={this.onSearchChange}
             onSubmit={this.onSearchSubmit}
           >
