@@ -11,6 +11,6 @@ The application you will build when you read the book to [learn React](https://w
 
 **Notes:**
 
-React component life-cycle
+Unidirection data flow:
 
 <img src="https://github.com/NamXH/hackernews-client/blob/master/React%20Component%20Life-cycle.png" width="500">
